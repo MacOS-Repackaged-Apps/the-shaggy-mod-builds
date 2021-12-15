@@ -64,7 +64,11 @@ class FreeplayState extends MusicBeatState
 		{
 			var songArray:Array<String> = initSonglist[i].split(":");
 
-			if (songArray[0] != 'Talladega' || FlxG.save.data.ending[2]) //this is a fucking bullshit condition but whatever
+			var skip = false;
+			var sng = songArray[0];
+			if ((sng == 'Talladega' || sng == 'BIG-SHOT') && !FlxG.save.data.ending[2]) skip = true;
+			
+			if (!skip)
 			{
 				addSong(songArray[0], 0, songArray[1]);
 				songs[songs.length-1].color = Std.parseInt(songArray[2]);
@@ -216,14 +220,14 @@ class FreeplayState extends MusicBeatState
 		}
 
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, CoolUtil.boundTo(elapsed * 24, 0, 1)));
-		lerpRating = FlxMath.lerp(lerpRating, intendedRating, CoolUtil.boundTo(elapsed * 12, 0, 1));
+		lerpRating = intendedRating;
 
 		if (Math.abs(lerpScore - intendedScore) <= 10)
 			lerpScore = intendedScore;
 		if (Math.abs(lerpRating - intendedRating) <= 0.01)
 			lerpRating = intendedRating;
 
-		scoreText.text = 'PERSONAL BEST: ' + lerpScore + ' (' + Math.floor(lerpRating * 100) + '%)';
+		scoreText.text = 'PERSONAL BEST: ' + lerpScore + ' (' + (Math.floor(lerpRating * 10000) / 100) + '%)';
 		positionHighscore();
 
 		var upP = controls.UI_UP_P;
